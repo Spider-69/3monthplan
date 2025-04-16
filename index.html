@@ -642,30 +642,40 @@
       "https://www.youtube.com/watch?v=Fy9SdZLBTOo",
       "https://www.youtube.com/watch?v=VVU3M_O25BQ"
     ];
-
     
     const tableBody = document.getElementById('table-body');
-    let progress = JSON.parse(localStorage.getItem('progress')) || Array(tasks.length).fill(false);
-    let notes = JSON.parse(localStorage.getItem('notes')) || Array(tasks.length).fill('');
+    let progress = JSON.parse(localStorage.getItem('progress')) || Array(90).fill(false); // Using 90 as default size
+    let notes = JSON.parse(localStorage.getItem('notes')) || Array(90).fill('');
     let currentNoteIndex = -1;
 
     function renderTable() {
       tableBody.innerHTML = '';
-      for (let week = 0; week < Math.ceil(tasks.length / 7); week++) {
+      
+      // Calculate how many tasks we're dealing with
+      const taskCount = Math.max(tasks.length, 90);
+      
+      for (let week = 0; week < Math.ceil(taskCount / 7); week++) {
         const startDay = week * 7;
-        const endDay = Math.min(startDay + 7, tasks.length);
+        const endDay = Math.min(startDay + 7, taskCount);
+        
+        // Add the week header
         tableBody.innerHTML += `
           <tr class="week-header" onclick="toggleWeek(${week})">
             <td colspan="4">Week ${week + 1} (Days ${startDay + 1}–${endDay})</td>
           </tr>
         `;
+        
+        // Add each task row for this week
         for (let i = startDay; i < endDay; i++) {
+          const taskText = tasks[i] || `Task ${i + 1}`;
+          const taskLink = links[i] || '#';
           const noteText = notes[i] ? 'View/Edit Notes' : 'Add Notes';
+          
           tableBody.innerHTML += `
-            <tr class="week-${week} ${progress[i] ? 'completed' : ''}">
+            <tr id="task-row-${i}" class="week-${week} ${progress[i] ? 'completed' : ''}">
               <td>Day ${i + 1}</td>
               <td><input type="checkbox" ${progress[i] ? 'checked' : ''} onchange="updateProgress(${i})"></td>
-              <td class="task-cell"><a href="${links[i] || '#'}" target="_blank">${tasks[i] || 'Task ' + (i+1)}</a></td>
+              <td class="task-cell"><a href="${taskLink}" target="_blank">${taskText}</a></td>
               <td><span class="notes-field" onclick="openNotesModal(${i})">${noteText}</span></td>
             </tr>
           `;
@@ -681,16 +691,14 @@
     }
 
     function updateProgress(index) {
+      // Update the progress array and localStorage
       progress[index] = !progress[index];
       localStorage.setItem('progress', JSON.stringify(progress));
       
-      // Toggle completed class for the row
-      const rows = document.querySelectorAll(`tr.week-${Math.floor(index/7)}`);
-      for (let i = 0; i < rows.length; i++) {
-        if (i-1 === index%7) {
-          rows[i].classList.toggle('completed', progress[index]);
-          break;
-        }
+      // Directly toggle the completed class on the specific row by ID
+      const row = document.getElementById(`task-row-${index}`);
+      if (row) {
+        row.classList.toggle('completed', progress[index]);
       }
       
       updateProgressBar();
@@ -698,7 +706,7 @@
 
     function openNotesModal(index) {
       currentNoteIndex = index;
-      document.getElementById('modal-task-name').textContent = tasks[index] || 'Task ' + (index+1);
+      document.getElementById('modal-task-name').textContent = tasks[index] || `Task ${index + 1}`;
       document.getElementById('modal-notes').value = notes[index] || '';
       document.getElementById('notes-modal').style.display = 'flex';
     }
@@ -712,17 +720,22 @@
       notes[currentNoteIndex] = newNote;
       localStorage.setItem('notes', JSON.stringify(notes));
       
-      // Update the note text in the table
-      const noteFields = document.querySelectorAll('.notes-field');
-      const rowIndex = (Math.floor(currentNoteIndex/7) * 7) + (currentNoteIndex % 7) + 1;
-      noteFields[rowIndex].textContent = newNote ? 'View/Edit Notes' : 'Add Notes';
+      // Update the note text directly on the row by ID
+      const row = document.getElementById(`task-row-${currentNoteIndex}`);
+      if (row) {
+        const noteField = row.querySelector('.notes-field');
+        if (noteField) {
+          noteField.textContent = newNote ? 'View/Edit Notes' : 'Add Notes';
+        }
+      }
       
       closeModal();
     }
 
     function updateProgressBar() {
+      const taskCount = Math.max(tasks.length, 90);
       const completed = progress.filter(Boolean).length;
-      const percentage = tasks.length > 0 ? (completed / tasks.length) * 100 : 0;
+      const percentage = taskCount > 0 ? (completed / taskCount) * 100 : 0;
       document.getElementById('progress-fill').style.width = `${percentage}%`;
       document.getElementById('progress-text').textContent = `${Math.round(percentage)}%`;
     }
@@ -745,8 +758,8 @@
         reader.onload = function(e) {
           try {
             const data = JSON.parse(e.target.result);
-            progress = data.progress || Array(tasks.length).fill(false);
-            notes = data.notes || Array(tasks.length).fill('');
+            progress = data.progress || Array(90).fill(false);
+            notes = data.notes || Array(90).fill('');
             localStorage.setItem('progress', JSON.stringify(progress));
             localStorage.setItem('notes', JSON.stringify(notes));
             renderTable();
