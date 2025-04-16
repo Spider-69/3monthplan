@@ -1,0 +1,772 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>3-Month Plan</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      background-color: rgb(255, 255, 255);
+      color: #333;
+      margin: 0;
+      padding: 0;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+    }
+
+    @media (max-width: 767px) {
+      body {
+        padding: 0;
+      }
+    }
+
+    @media (min-width: 768px) {
+      body {
+        padding: 40px;
+      }
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      background-color: white;
+      border-radius: 25px;
+      padding: 25px;
+      width: 100%;
+      box-sizing: border-box;
+    }
+
+    h2 {
+      text-align: center;
+      color: #0288d1;
+      font-size: 2em;
+      margin-bottom: 25px;
+      position: relative;
+      display: inline-block;
+      width: 100%;
+    }
+
+    h2:before, h2:after {
+      content: "🎐";
+      margin: 0 15px;
+      display: inline-block;
+      animation: float 3s ease-in-out infinite;
+    }
+
+    @keyframes float {
+      0% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+      100% { transform: translateY(0); }
+    }
+
+    table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      border: 2px solid #81d4fa;
+      border-radius: 20px;
+      overflow: hidden;
+      background: #ffffff;
+      box-shadow: 0 8px 25px rgba(41, 182, 246, 0.15);
+      margin-bottom: 25px;
+      transition: all 0.3s ease;
+    }
+
+    table:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 12px 30px rgba(41, 182, 246, 0.25);
+    }
+
+    th, td {
+      padding: 15px;
+      text-align: left;
+      border-bottom: 1px solid #e1f5fe;
+    }
+
+    th {
+      background: lightskyblue;
+      font-weight: 600;
+      color: white;
+      letter-spacing: 0.5px;
+    }
+
+    tr:last-child td {
+      border-bottom: none;
+    }
+
+    tr:hover {
+      background-color: #e1f5fe;
+    }
+
+    input[type="checkbox"] {
+      transform: scale(1.4);
+      accent-color: lightskyblue;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    input[type="checkbox"]:checked {
+      filter: drop-shadow(0 0 2px lightskyblue);
+    }
+
+    .notes-field {
+      cursor: pointer;
+      color: #0288d1;
+      text-decoration: underline;
+      font-size: 0.9em;
+    }
+
+    td:first-child {
+      width: 80px;
+      font-weight: 600;
+      color: #0288d1;
+    }
+
+    .task-cell::before {
+      content: "\f005"; /* Star icon */
+      font-family: "Font Awesome 6 Free";
+      font-weight: 900;
+      color: lightskyblue;
+      margin-right: 10px;
+    }
+
+    .task-cell a {
+      text-decoration: none;
+      color: #333;
+      transition: all 0.2s;
+      position: relative;
+      cursor: pointer;
+    }
+
+    .task-cell a:hover {
+      color: #0288d1;
+      text-decoration: none;
+    }
+
+    .task-cell a::after {
+      content: '';
+      position: absolute;
+      width: 0;
+      height: 2px;
+      bottom: -2px;
+      left: 0;
+      background-color: lightskyblue;
+      transition: width 0.3s;
+    }
+
+    .task-cell a:hover::after {
+      width: 100%;
+    }
+    
+    /* Style for completed tasks */
+    tr.completed .task-cell a {
+      text-decoration: line-through;
+      opacity: 0.6;
+    }
+
+    .week-header {
+      background: lightskyblue;
+      cursor: pointer;
+      font-size: 1.1em;
+      color: white;
+      font-weight: 600;
+      transition: all 0.3s;
+      text-align: center;
+    }
+
+    .week-header:hover {
+      background: #87cefa;
+      letter-spacing: 1px;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    .progress-container {
+      margin: 20px 0 30px;
+      text-align: center;
+    }
+
+    .progress-container p {
+      font-size: 1.1em;
+      color: #0288d1;
+      margin-bottom: 10px;
+      font-weight: 600;
+    }
+
+    .progress-bar {
+      width: 100%;
+      background: #e1f5fe;
+      border-radius: 15px;
+      height: 22px;
+      overflow: hidden;
+      box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.1);
+      position: relative;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: lightskyblue;
+      transition: width 0.5s ease;
+      border-radius: 15px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .progress-fill::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(
+        to right,
+        rgba(255, 255, 255, 0) 0%,
+        rgba(255, 255, 255, 0.4) 50%,
+        rgba(255, 255, 255, 0) 100%
+      );
+      animation: shine 2s infinite;
+    }
+
+    @keyframes shine {
+      0% { transform: translateX(-100%); }
+      100% { transform: translateX(100%); }
+    }
+
+    .buttons-container {
+      display: flex;
+      justify-content: center;
+      gap: 15px;
+      margin-bottom: 25px;
+    }
+
+    button {
+      background: lightskyblue;
+      color: white;
+      border: none;
+      padding: 12px 24px;
+      border-radius: 50px;
+      cursor: pointer;
+      font-size: 1em;
+      font-weight: 600;
+      box-shadow: 0 4px 15px rgba(135, 206, 250, 0.3);
+      transition: all 0.3s;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    button:hover {
+      background: #87cefa;
+      transform: translateY(-3px);
+      box-shadow: 0 7px 20px rgba(135, 206, 250, 0.4);
+    }
+
+    button:active {
+      transform: translateY(1px);
+    }
+
+    button:before {
+      font-family: "Font Awesome 6 Free";
+      font-weight: 900;
+    }
+
+    button:nth-child(1):before {
+      content: "\f019"; /* Download icon */
+    }
+
+    button:nth-child(2):before {
+      content: "\f093"; /* Upload icon */
+    }
+
+    /* Modal styles */
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 100;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.5);
+      justify-content: center;
+      align-items: center;
+    }
+
+    .modal-content {
+      background-color: white;
+      padding: 25px;
+      border-radius: 15px;
+      width: 90%;
+      max-width: 500px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+      animation: slideIn 0.3s ease;
+      position: relative;
+    }
+
+    @keyframes slideIn {
+      from {
+        transform: translateY(-50px);
+        opacity: 0;
+      }
+      to {
+        transform: translateY(0);
+        opacity: 1;
+      }
+    }
+
+    .modal h3 {
+      margin-top: 0;
+      color: #0288d1;
+      font-size: 1.3em;
+      margin-bottom: 15px;
+    }
+
+    .modal textarea {
+      width: 100%;
+      min-height: 150px;
+      border: 1px solid #b3e5fc;
+      border-radius: 10px;
+      padding: 12px;
+      font-size: 1em;
+      font-family: 'Poppins', sans-serif;
+      margin-bottom: 15px;
+      box-sizing: border-box;
+      resize: vertical;
+    }
+
+    .modal textarea:focus {
+      outline: none;
+      border-color: lightskyblue;
+      box-shadow: 0 0 8px rgba(135, 206, 250, 0.4);
+    }
+
+    .modal-buttons {
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+    }
+
+    .close-modal {
+      background: #e1f5fe;
+      color: #0288d1;
+    }
+
+    /* Mobile Responsiveness */
+    @media (max-width: 767px) {
+      .container {
+        padding: 15px;
+        border-radius: 15px;
+        margin: 0;
+        width: 100%;
+      }
+
+      h2 {
+        font-size: 1.5em;
+      }
+
+      h2:before, h2:after {
+        margin: 0 5px;
+      }
+
+      th, td {
+        padding: 10px 8px;
+        font-size: 0.9em;
+      }
+
+      td:first-child {
+        width: 60px;
+      }
+
+      .task-cell::before {
+        margin-right: 5px;
+      }
+      
+      .buttons-container {
+        flex-direction: row;
+        justify-content: space-between;
+        gap: 5px;
+      }
+
+      button {
+        width: auto;
+        padding: 10px 15px;
+        font-size: 0.85em;
+      }
+      
+      .modal-content {
+        width: 95%;
+        padding: 15px;
+      }
+    }
+
+    body * {
+      cursor: default;
+    }
+    
+    a, button, input[type="checkbox"], .notes-field, .week-header {
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>3 Month Plan</h2>
+    
+    <div class="progress-container">
+      <p>Progress: <span id="progress-text">0%</span></p>
+      <div class="progress-bar">
+        <div class="progress-fill" id="progress-fill" style="width: 0%;"></div>
+      </div>
+    </div>
+    
+    <div class="buttons-container">
+      <button onclick="downloadProgress()">Download Progress</button>
+      <button onclick="document.getElementById('file-input').click()">Load Progress</button>
+      <input type="file" id="file-input" style="display: none;" accept=".json" onchange="loadProgress(event)">
+    </div>
+
+    <table id="learning-plan">
+      <thead>
+        <tr>
+          <th>Day</th>
+          <th>Done</th>
+          <th>Task</th>
+          <th>Notes</th>
+        </tr>
+      </thead>
+      <tbody id="table-body"></tbody>
+    </table>
+  </div>
+  
+  <!-- Modal for Notes -->
+  <div id="notes-modal" class="modal">
+    <div class="modal-content">
+      <h3>Notes for: <span id="modal-task-name"></span></h3>
+      <textarea id="modal-notes" placeholder="Add your notes here..."></textarea>
+      <div class="modal-buttons">
+        <button class="close-modal" onclick="closeModal()">Cancel</button>
+        <button onclick="saveNotes()">Save</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const tasks = [
+      "Learn design basics (spacing, contrast, alignment)",
+      "Study color theory + typography (Canva)",
+      "Watch Figma Crash Course on YouTube",
+      "Explore Figma: frames, auto layout, spacing",
+      "Design a simple login page in Figma",
+      "Design a profile screen UI",
+      "Rest or browse design inspiration (Dribbble)",
+      "Learn Figma components, buttons, navbars",
+      "Design an app homepage in Figma",
+      "Watch Mobile App Design tutorials",
+      "Redesign Instagram/YT (practice)",
+      "Create a 3–4 screen mobile app UI",
+      "Export and organize your Figma designs",
+      "Upload your design portfolio to Google Drive",
+      "Sign up on FreeCodeCamp & start Responsive Web Design",
+      "Learn HTML basics: tags, headings, links",
+      "Learn CSS basics: color, font, background",
+      "Learn margin, padding, box model",
+      "Master Flexbox layout system",
+      "Build a basic landing page (HTML/CSS)",
+      "Rest or review FreeCodeCamp lessons",
+      "Learn CSS Grid layout",
+      "Practice layout using Grid (FreeCodeCamp)",
+      "Build a 2-page personal site (about + contact)",
+      "Use Google Fonts + FontAwesome icons",
+      "Add transitions and hover effects",
+      "Build a responsive website (mobile/desktop)",
+      "Polish previous project, fix bugs",
+      "Design full site layout in Figma (3 pages)",
+      "Code the Figma design with HTML/CSS",
+      "Make sure it's mobile responsive",
+      "Add a dummy contact form (no backend)",
+      "Create a 'My Projects' section",
+      "Learn how to publish using GitHub Pages",
+      "Publish your portfolio site online",
+      "Intro to JavaScript: variables, functions",
+      "Learn DOM basics (querySelector, events)",
+      "Add interactivity: dark mode toggle or menu",
+      "Add scroll or hover animations (AOS.js)",
+      "Review and improve design + site",
+      "Add favicon, final polish, test everything",
+      "Backup your files on GitHub",
+      "Rest or review everything so far",
+      "Sign up on Fiverr & Freelancer.com",
+      "Create 2 Fiverr gigs (UI/UX or Web Design)",
+      "Design gig thumbnails using Canva",
+      "Upload your Figma + web screenshots to gig",
+      "Join 2–3 freelancing Facebook groups",
+      "Message small local businesses for practice work",
+      "Try a mini project for a friend (free/cheap)",
+      "Watch 'How to get clients on Fiverr' videos",
+      "Improve Fiverr SEO + gig title",
+      "Apply to 5 jobs on Upwork or Freelancer",
+      "Ask for review or testimonial from someone",
+      "Design second UI/UX concept",
+      "Add feedback/review section to site",
+      "Share your portfolio on social media",
+      "Apply to 5 more freelance jobs",
+      "Rest or reflect on progress",
+      "Learn Tailwind CSS basics",
+      "Build a landing page with Tailwind CSS",
+      "Intro to React: components, props",
+      "Build a simple React app (e.g., todo list)",
+      "Create a Behance/Dribbble portfolio",
+      "Set up a LinkedIn profile for freelancing",
+      "Learn to write client proposals (templates)",
+      "Pitch to 3 potential clients directly",
+      "Learn basic pricing strategies for freelancers",
+      "Celebrate progress — you're a freelance pro!",
+      "Learn CSS animations (keyframes, transitions)",
+      "Create an animated UI element in Figma + CSS",
+      "Explore Vue.js basics (components, directives)",
+      "Build a small Vue.js app (e.g., task tracker)",
+      "Learn web accessibility (a11y) basics",
+      "Audit your portfolio site for accessibility",
+      "Design a niche UI (e.g., e-commerce checkout)",
+      "Code the niche UI with HTML/CSS/JS",
+      "Create a case study for a project (Behance)",
+      "Start a personal website (e.g., WordPress, Wix)",
+      "Write a blog post about your freelancing journey",
+      "Share your blog post on Twitter/X",
+      "Learn time management for freelancers (tools like Trello)",
+      "Set up invoicing with PayPal or Stripe",
+      "Join a freelance community (e.g., Reddit, Discord)",
+      "Learn negotiation skills for client contracts",
+      "Apply to 5 more freelance jobs (specialized platforms)",
+      "Create a third Fiverr gig (e.g., niche UI/UX)",
+      "Plan to learn a backend skill (e.g., Node.js basics)",
+      "Celebrate 3 months of growth — you're unstoppable!"
+    ];
+
+    const links = [
+      "https://www.youtube.com/watch?v=a5KYlHNKQB8",
+      "https://www.canva.com/designschool",
+      "https://www.youtube.com/watch?v=FTFaQWZBqQ8",
+      "https://www.youtube.com/watch?v=4tYJ4-cq5Uo",
+      "https://www.youtube.com/watch?v=ps6p9e_O8zE",
+      "https://www.youtube.com/watch?v=PB-0E0EZcak",
+      "https://dribbble.com/",
+      "https://www.youtube.com/watch?v=c9Wg6Cb_YlU",
+      "https://www.youtube.com/watch?v=tLMUDSMYAQk",
+      "https://www.youtube.com/results?search_query=mobile+app+design+tutorial",
+      "https://www.youtube.com/watch?v=n_ec3eowFLQ",
+      "https://www.youtube.com/watch?v=iDHC2aLJqDg",
+      "https://help.figma.com/hc/en-us/articles/360040028034-Guide-to-exports-in-Figma",
+      "https://drive.google.com/",
+      "https://www.freecodecamp.org/learn/2022/responsive-web-design/",
+      "https://www.freecodecamp.org/learn/2022/responsive-web-design/#learn-html-by-building-a-cat-photo-app",
+      "https://www.freecodecamp.org/learn/2022/responsive-web-design/#learn-basic-css-by-building-a-cafe-menu",
+      "https://www.freecodecamp.org/learn/2022/responsive-web-design/#learn-css-colors-by-building-a-set-of-colored-markers",
+      "https://www.freecodecamp.org/learn/2022/responsive-web-design/#learn-css-flexbox-by-building-a-photo-gallery",
+      "https://www.freecodecamp.org/learn/2022/responsive-web-design/#build-a-product-landing-page-project",
+      "https://www.freecodecamp.org/learn/2022/responsive-web-design/",
+      "https://www.freecodecamp.org/learn/2022/responsive-web-design/#learn-css-grid-by-building-a-magazine",
+      "https://www.freecodecamp.org/learn/2022/responsive-web-design/#learn-css-grid-by-building-a-magazine",
+      "https://www.freecodecamp.org/learn/2022/responsive-web-design/#build-a-personal-portfolio-webpage-project",
+      "https://fonts.google.com/",
+      "https://www.youtube.com/watch?v=zHUpx90NerM",
+      "https://www.youtube.com/watch?v=8xKWVZ37TM4",
+      "https://www.youtube.com/watch?v=dQvdIBkwMdU",
+      "https://www.youtube.com/watch?v=4tYJ4-cq5Uo",
+      "https://www.youtube.com/watch?v=KodXPsd0n5g",
+      "https://www.youtube.com/watch?v=VQraviuwbzU",
+      "https://www.youtube.com/watch?v=Iv93yjdvkWI",
+      "https://www.youtube.com/watch?v=C3G3c66HQfE",
+      "https://pages.github.com/",
+      "https://www.youtube.com/watch?v=8hrJ4oN1u_8",
+      "https://www.freecodecamp.org/learn/javascript-algorithms-and-data-structures/#basic-javascript",
+      "https://www.freecodecamp.org/learn/javascript-algorithms-and-data-structures/#basic-javascript",
+      "https://www.youtube.com/watch?v=RxWVA5MB5M8",
+      "https://github.com/michalsnik/aos",
+      "https://www.youtube.com/watch?v=vnCGDDhLzh0",
+      "https://www.youtube.com/watch?v=kEf1xSwX5D8",
+      "https://www.youtube.com/watch?v=3RmZQ-EpY8M",
+      "https://www.youtube.com/watch?v=qw--VELREyI",
+      "https://www.fiverr.com/start_selling",
+      "https://www.youtube.com/watch?v=CJaEMhGj5CQ",
+      "https://www.canva.com/create/fiverr-gig-images/",
+      "https://www.youtube.com/watch?v=tU5ZnuQC2Z4",
+      "https://www.facebook.com/groups/FreelanceToFreedom/",
+      "https://www.youtube.com/watch?v=iJ5yYUGv9iY",
+      "https://www.youtube.com/watch?v=kYeyAbKw3oQ",
+      "https://www.youtube.com/results?search_query=how+to+get+clients+on+fiverr",
+      "https://www.youtube.com/watch?v=dqdxnQH3yNs",
+      "https://www.upwork.com/",
+      "https://www.youtube.com/watch?v=tYUXyYJFNUE",
+      "https://www.youtube.com/watch?v=F-KbB1lmRQ4",
+      "https://www.youtube.com/watch?v=yQ5Zg3BEtMI",
+      "https://www.youtube.com/watch?v=9Zr7-nFLohI",
+      "https://www.upwork.com/",
+      "https://www.youtube.com/watch?v=XgU_vYl9JxY",
+      "https://tailwindcss.com/docs/installation",
+      "https://www.youtube.com/watch?v=dFgzHOX84xQ",
+      "https://react.dev/learn",
+      "https://www.youtube.com/watch?v=w7ejDZ8SWv8",
+      "https://www.behance.net/",
+      "https://www.linkedin.com/",
+      "https://www.youtube.com/watch?v=DVnzSxBMw1k",
+      "https://www.youtube.com/watch?v=3iu_HJTM9aI",
+      "https://www.youtube.com/watch?v=POYjV2R-wpI",
+      "https://www.youtube.com/watch?v=GCxtu2-1uJ8",
+      "https://www.youtube.com/watch?v=YszONjKpgg4",
+      "https://www.youtube.com/watch?v=FVr8Dj-SjUc",
+      "https://vuejs.org/guide/introduction.html",
+      "https://www.youtube.com/watch?v=qZXt1Aom3Cs",
+      "https://www.youtube.com/watch?v=g9Qff0b-lHk",
+      "https://www.youtube.com/watch?v=19g36PLCMQs",
+      "https://www.youtube.com/watch?v=nP_jkdPSMtE",
+      "https://www.youtube.com/watch?v=M_eaBcany6Y",
+      "https://www.youtube.com/watch?v=tJWGNgfPdNE",
+      "https://wordpress.com/",
+      "https://www.youtube.com/watch?v=n5N7M7OdxX8",
+      "https://twitter.com/",
+      "https://trello.com/",
+      "https://www.paypal.com/",
+      "https://www.reddit.com/r/freelance/",
+      "https://www.youtube.com/watch?v=tvePF3QfGH8",
+      "https://www.youtube.com/watch?v=HSm4qcFXa5g",
+      "https://www.fiverr.com/start_selling",
+      "https://www.youtube.com/watch?v=Fy9SdZLBTOo",
+      "https://www.youtube.com/watch?v=VVU3M_O25BQ"
+    ];
+
+    
+    const tableBody = document.getElementById('table-body');
+    let progress = JSON.parse(localStorage.getItem('progress')) || Array(tasks.length).fill(false);
+    let notes = JSON.parse(localStorage.getItem('notes')) || Array(tasks.length).fill('');
+    let currentNoteIndex = -1;
+
+    function renderTable() {
+      tableBody.innerHTML = '';
+      for (let week = 0; week < Math.ceil(tasks.length / 7); week++) {
+        const startDay = week * 7;
+        const endDay = Math.min(startDay + 7, tasks.length);
+        tableBody.innerHTML += `
+          <tr class="week-header" onclick="toggleWeek(${week})">
+            <td colspan="4">Week ${week + 1} (Days ${startDay + 1}–${endDay})</td>
+          </tr>
+        `;
+        for (let i = startDay; i < endDay; i++) {
+          const noteText = notes[i] ? 'View/Edit Notes' : 'Add Notes';
+          tableBody.innerHTML += `
+            <tr class="week-${week} ${progress[i] ? 'completed' : ''}">
+              <td>Day ${i + 1}</td>
+              <td><input type="checkbox" ${progress[i] ? 'checked' : ''} onchange="updateProgress(${i})"></td>
+              <td class="task-cell"><a href="${links[i] || '#'}" target="_blank">${tasks[i] || 'Task ' + (i+1)}</a></td>
+              <td><span class="notes-field" onclick="openNotesModal(${i})">${noteText}</span></td>
+            </tr>
+          `;
+        }
+      }
+      updateProgressBar();
+    }
+
+    function toggleWeek(week) {
+      document.querySelectorAll(`.week-${week}`).forEach(row => {
+        row.classList.toggle('hidden');
+      });
+    }
+
+    function updateProgress(index) {
+      progress[index] = !progress[index];
+      localStorage.setItem('progress', JSON.stringify(progress));
+      
+      // Toggle completed class for the row
+      const rows = document.querySelectorAll(`tr.week-${Math.floor(index/7)}`);
+      for (let i = 0; i < rows.length; i++) {
+        if (i-1 === index%7) {
+          rows[i].classList.toggle('completed', progress[index]);
+          break;
+        }
+      }
+      
+      updateProgressBar();
+    }
+
+    function openNotesModal(index) {
+      currentNoteIndex = index;
+      document.getElementById('modal-task-name').textContent = tasks[index] || 'Task ' + (index+1);
+      document.getElementById('modal-notes').value = notes[index] || '';
+      document.getElementById('notes-modal').style.display = 'flex';
+    }
+
+    function closeModal() {
+      document.getElementById('notes-modal').style.display = 'none';
+    }
+
+    function saveNotes() {
+      const newNote = document.getElementById('modal-notes').value;
+      notes[currentNoteIndex] = newNote;
+      localStorage.setItem('notes', JSON.stringify(notes));
+      
+      // Update the note text in the table
+      const noteFields = document.querySelectorAll('.notes-field');
+      const rowIndex = (Math.floor(currentNoteIndex/7) * 7) + (currentNoteIndex % 7) + 1;
+      noteFields[rowIndex].textContent = newNote ? 'View/Edit Notes' : 'Add Notes';
+      
+      closeModal();
+    }
+
+    function updateProgressBar() {
+      const completed = progress.filter(Boolean).length;
+      const percentage = tasks.length > 0 ? (completed / tasks.length) * 100 : 0;
+      document.getElementById('progress-fill').style.width = `${percentage}%`;
+      document.getElementById('progress-text').textContent = `${Math.round(percentage)}%`;
+    }
+
+    function downloadProgress() {
+      const data = { progress, notes };
+      const blob = new Blob([JSON.stringify(data)], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'learning-plan-progress.json';
+      a.click();
+      URL.revokeObjectURL(url);
+    }
+
+    function loadProgress(event) {
+      const file = event.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          try {
+            const data = JSON.parse(e.target.result);
+            progress = data.progress || Array(tasks.length).fill(false);
+            notes = data.notes || Array(tasks.length).fill('');
+            localStorage.setItem('progress', JSON.stringify(progress));
+            localStorage.setItem('notes', JSON.stringify(notes));
+            renderTable();
+          } catch (error) {
+            alert('Error loading file: ' + error.message);
+          }
+        };
+        reader.readAsText(file);
+      }
+    }
+
+    // Close modal when clicking outside
+    window.onclick = function(event) {
+      const modal = document.getElementById('notes-modal');
+      if (event.target === modal) {
+        closeModal();
+      }
+    }
+
+    renderTable();
+  </script>
+</body>
+</html>
